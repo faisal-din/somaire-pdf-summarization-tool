@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
-import { Source_Sans_3 as FontSans, Geist } from 'next/font/google';
+import { Source_Sans_3 as FontSans } from 'next/font/google';
 import './globals.css';
-import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const fontSans = FontSans({
+  variable: '--font-sans',
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
+});
 
 export const metadata: Metadata = {
   title: 'Somaire - AI-Powered PDF Summarization Tool',
@@ -17,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className={cn("antialiased", "font-sans", geist.variable)}>
+    <html lang='en' className={`${fontSans.variable}  antialiased`}>
       <body className='min-h-full flex flex-col'>{children}</body>
     </html>
   );
