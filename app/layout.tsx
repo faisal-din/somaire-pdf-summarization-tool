@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Source_Sans_3 as FontSans } from 'next/font/google';
+import Header from '@/components/common/Header';
+import Footer from '@/components/common/Footer';
 import './globals.css';
 
 const fontSans = FontSans({
@@ -9,7 +11,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'Somaire - AI-Powered PDF Summarization Tool',
+  title: 'Sommaire - AI-Powered PDF Summarization Tool',
   description:
     'Save hours of reading time. Transform lengthy PDFs into clear, accurate summaries in seconds with our AI-powered PDF summarization tool.',
 };
@@ -20,8 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className={`${fontSans.variable}  antialiased`}>
-      <body className='min-h-full flex flex-col'>{children}</body>
+    <html lang='en'>
+      <body className={`${fontSans.variable} font-sans antialiased`}>
+        <div className='relative min-h-screen flex flex-col '>
+          <Header />
+          <main className='flex-1'>{children}</main>
+          <Footer />
+        </div>
+      </body>
     </html>
   );
 }
