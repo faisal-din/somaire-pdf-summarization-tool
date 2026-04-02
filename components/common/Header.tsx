@@ -18,12 +18,16 @@ const Header = () => {
       <div className='flex lg:justify-center gap-4 lg:gap-12 lg:items-center'>
         <NavLink
           href='/#pricing'
-          className='transition-colors text-sm duration-200 text-gray-600 hover:text-rose-500'
+          className='transition-colors text-sm font-medium duration-200 text-gray-600 hover:text-rose-500'
         >
           Pricing
         </NavLink>
 
-        {isSignedIn && <NavLink href='/dashboard'>Your Summaries</NavLink>}
+        {isSignedIn && (
+          <NavLink href='/dashboard' className='text-sm font-medium'>
+            Your Summaries
+          </NavLink>
+        )}
       </div>
 
       <div className='flex lg:justify-end lg:flex-1'>
@@ -31,7 +35,7 @@ const Header = () => {
           <div className='flex gap-2 items-center'>
             <NavLink
               href='/upload'
-              className='transition-colors text-sm duration-200 text-gray-600 hover:text-rose-500'
+              className='transition-colors text-sm font-medium duration-200 text-gray-600 hover:text-rose-500'
             >
               Upload a PDF
             </NavLink>
