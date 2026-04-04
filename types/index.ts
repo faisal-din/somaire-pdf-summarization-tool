@@ -3,3 +3,13 @@ export type StepProps = {
   label: string;
   description: string;
 };
+
+export type PricingCardProps = {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  items: string[];
+  paymentLink: string;
+  priceId: string;
+};
