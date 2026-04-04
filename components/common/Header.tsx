@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import NavLink from './NavLink';
 
 const Header = () => {
-  const isSignedIn = true; // Replace with actual authentication logic
+  const isSignedIn = false; // Replace with actual authentication logic
 
   return (
     <nav className='container flex items-center justify-between py-4 lg:px-8 px-4 mx-auto'>
