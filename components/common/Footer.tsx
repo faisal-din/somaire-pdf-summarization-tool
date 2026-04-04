@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Brand */}
           <Link
             href='/'
-            onClick={() => scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className='group flex items-center gap-2 shrink-0'
           >
             <FileText className='w-4 h-4 text-gray-800 dark:text-gray-200 group-hover:rotate-12 transition-transform duration-200 ease-in-out' />
