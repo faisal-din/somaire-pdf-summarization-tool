@@ -149,7 +149,7 @@
     @apply hover:cursor-pointer;
   }
 
-  button {
+  button:not([class]) {
     @apply hover:cursor-pointer bg-rose-600 hover:bg-rose-700;
   }
 
