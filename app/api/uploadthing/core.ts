@@ -22,11 +22,10 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log('Upload complete for userId:', metadata.userId);
 
-      console.log('File Url: ', file.url);
+      console.log('File Url: ', file.ufsUrl);
 
       return {
-        uploadedBy: metadata.userId,
-        url: file.url,
+        userId: metadata.userId,
         file,
       };
     }),

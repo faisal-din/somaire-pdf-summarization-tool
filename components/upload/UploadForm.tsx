@@ -4,6 +4,7 @@ import { fileUploadSchema } from '@/constants/schema';
 import UploadFormInput from './UploadFormInput';
 import { toast } from 'sonner';
 import { useUploadThing } from '@/utils/uploadthing';
+import { generatePDFSummary } from '@/actions/upload.action';
 
 const UploadForm = () => {
   const { startUpload, routeConfig } = useUploadThing('pdfUploader', {
@@ -29,7 +30,7 @@ const UploadForm = () => {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     console.log('File uploaded successfully.');
@@ -61,12 +62,9 @@ const UploadForm = () => {
     });
 
     // upload the file to the uploadthing
-    const uploadResponse = startUpload([file]);
+    const uploadResponse = await startUpload([file]);
 
-    console.log(
-      'Upload Response: ',
-      uploadResponse.then((res) => console.log('Upload Response: ', res))
-    );
+    console.log('Upload Response: ', uploadResponse);
 
     if (!uploadResponse) {
       toast.error('Something went wrong.', {
@@ -82,7 +80,11 @@ const UploadForm = () => {
     // toast('Processing file...', {
     //   description: 'Hang tight! Our AI is reading through your document.',
     // });
+
     // parse the pdf using langchain
+    const summary = await generatePDFSummary(uploadResponse);
+
+    console.log('Summary: ', summary);
     // summarize the content using AI
     // save the summary to the database
     // redirect to the summary page
