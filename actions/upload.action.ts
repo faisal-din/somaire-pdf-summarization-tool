@@ -1,5 +1,6 @@
 'use server';
 
+import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchAndExtractPDFText } from '@/lib/langchain';
 import {
   ActionResult,
@@ -38,7 +39,21 @@ export async function generatePDFSummary(
     const pdfText = await fetchAndExtractPDFText(pdfUrl);
     console.log('pdf text: ', pdfText);
 
-    return createSuccessResult(pdfText, 'PDF processed successfully');
+    let summary;
+
+    try {
+      summary = await generateSummaryFromGemini(pdfText);
+      // console.log('Generated summary from gemini: ', summary);
+
+      if (!summary) {
+        throw new Error('Received empty summary from Gemini.');
+      }
+    } catch (error) {
+      console.error('Error generating summary with Gemini:', error);
+      return createErrorResult('Failed to generate summary with Gemini.');
+    }
+
+    return createSuccessResult(summary, 'PDF processed successfully');
   } catch (error) {
     console.error('Error generating PDF summary:', error);
     return createErrorResult('Failed to generate PDF summary.');

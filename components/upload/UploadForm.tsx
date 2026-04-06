@@ -77,8 +77,6 @@ const UploadForm = () => {
       // Extract and summarize PDF content via server action
       const result = await generatePDFSummary(uploadResponse);
 
-      console.log('result: ', result);
-
       const { data = null, message = null } = result || {};
 
       if (!data) {

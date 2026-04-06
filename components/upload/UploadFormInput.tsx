@@ -32,7 +32,7 @@ const UploadFormInput = forwardRef<HTMLFormElement, UploadFormInputProps>(
             {isLoading ? (
               <>
                 <Loader className='animate-spin mr-2' size={16} />
-                Uploading...
+                Processing...
               </>
             ) : (
               'Upload your PDF'
