@@ -1,6 +1,11 @@
 'use server';
 
 import { fetchAndExtractPDFText } from '@/lib/langchain';
+import {
+  ActionResult,
+  createErrorResult,
+  createSuccessResult,
+} from '@/types/action';
 
 type UploadResponse = {
   serverData: {
@@ -9,17 +14,11 @@ type UploadResponse = {
   };
 }[];
 
-type ActionResult<T> = { success: boolean; message: string; data: T | null };
-
 export async function generatePDFSummary(
   uploadResponse: UploadResponse
 ): Promise<ActionResult<string>> {
   if (!uploadResponse || uploadResponse.length === 0) {
-    return {
-      success: false,
-      message: 'File upload failed.',
-      data: null,
-    };
+    return createErrorResult('No uploaded files provided.');
   }
 
   const {
@@ -32,29 +31,16 @@ export async function generatePDFSummary(
   if (!pdfUrl) {
     console.error('PDF URL is missing in the upload response:', uploadResponse);
 
-    return {
-      success: false,
-      message: 'PDF URL is missing.',
-      data: null,
-    };
+    return createErrorResult('PDF URL is missing.');
   }
 
   try {
     const pdfText = await fetchAndExtractPDFText(pdfUrl);
-
     console.log('pdf text: ', pdfText);
 
-    return {
-      success: true,
-      message: 'PDF processed successfully',
-      data: pdfText,
-    };
+    return createSuccessResult(pdfText, 'PDF processed successfully');
   } catch (error) {
     console.error('Error generating PDF summary:', error);
-    return {
-      success: false,
-      message: 'Failed to generate PDF summary.',
-      data: null,
-    };
+    return createErrorResult('Failed to generate PDF summary.');
   }
 }
