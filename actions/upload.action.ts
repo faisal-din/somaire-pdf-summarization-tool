@@ -14,7 +14,7 @@ type ActionResult<T> = { success: boolean; message: string; data: T | null };
 export async function generatePDFSummary(
   uploadResponse: UploadResponse
 ): Promise<ActionResult<string>> {
-  if (!uploadResponse) {
+  if (!uploadResponse || uploadResponse.length === 0) {
     return {
       success: false,
       message: 'File upload failed.',
