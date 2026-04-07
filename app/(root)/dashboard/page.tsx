@@ -66,7 +66,12 @@ const Dashboard = async () => {
 
           {/* Summary card */}
           {summaries.length === 0 ? (
-            <EmptyState />
+            <EmptyState
+              title='No Summaries Yet'
+              description='Upload your first PDF to get started with AI-Powered summaries.'
+              buttonText='Create your first summary'
+              link='/upload'
+            />
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 sm:px-0'>
               {summaries.map((summary) => (

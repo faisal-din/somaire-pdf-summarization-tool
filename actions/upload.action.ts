@@ -3,7 +3,7 @@
 import { getDbConnection } from '@/lib/db';
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchAndExtractPDFText } from '@/lib/langchain';
-import { StorePdfSummaryParams, UploadResponseProps } from '@/types';
+import { SavePdfSummaryProps, UploadResponseProps } from '@/types';
 import { ActionResponse, ErrorResponse, SuccessResponse } from '@/types/action';
 import { formatFileNameAsTitle } from '@/utils/format-fileName';
 import { auth } from '@clerk/nextjs/server';
@@ -11,7 +11,8 @@ import { revalidatePath } from 'next/cache';
 
 type PdfSummaryResponse = { summary: string; title: string };
 
-export async function generatePDFSummaryAction(
+// Generate summary from uploaded PDF
+export async function generatePdfSummaryAction(
   uploadResponse: UploadResponseProps
 ): Promise<ActionResponse<PdfSummaryResponse>> {
   if (!uploadResponse || uploadResponse.length === 0) {
@@ -27,8 +28,7 @@ export async function generatePDFSummaryAction(
 
   if (!pdfUrl) {
     console.error('PDF URL is missing in the upload response:', uploadResponse);
-
-    return ErrorResponse('PDF URL is missing.');
+    return ErrorResponse('Invalid upload response.');
   }
 
   try {
@@ -47,9 +47,7 @@ export async function generatePDFSummaryAction(
     } catch (error) {
       console.error('Error generating summary with Gemini:', error);
       return ErrorResponse(
-        error instanceof Error
-          ? error.message
-          : 'Failed to generate summary with Gemini, please try again.'
+        'Failed to generate summary with Gemini, please try again.'
       );
     }
 
@@ -63,18 +61,20 @@ export async function generatePDFSummaryAction(
       'PDF processed successfully'
     );
   } catch (error) {
-    console.error('Error generating PDF summary:', error);
+    console.error('PDF summary generation error:', error);
     return ErrorResponse('Failed to generate PDF summary.');
   }
 }
 
-export async function savedPdfSummaryAction({
+// separate function to handle database insertion of the summary, called from the main action to keep concerns separated
+// Insert PDF summary into database
+async function insertPdfSummary({
   userId,
   fileUrl,
   summary,
   title,
   fileName,
-}: StorePdfSummaryParams) {
+}: SavePdfSummaryProps) {
   try {
     const sql = await getDbConnection();
 
@@ -102,12 +102,13 @@ export async function savedPdfSummaryAction({
   }
 }
 
-export async function storePdfSummaryAction({
+// Main action to save the PDF summary, which calls the insert function and handles cache revalidation
+export async function savePdfSummaryAction({
   fileUrl,
   summary,
   title,
   fileName,
-}: StorePdfSummaryParams) {
+}: SavePdfSummaryProps) {
   let savedSummary: any;
 
   try {
@@ -116,7 +117,7 @@ export async function storePdfSummaryAction({
       return ErrorResponse('User not found.');
     }
 
-    savedSummary = await savedPdfSummaryAction({
+    savedSummary = await insertPdfSummary({
       userId,
       fileUrl,
       summary,
@@ -128,11 +129,9 @@ export async function storePdfSummaryAction({
       return ErrorResponse('Failed to save PDF summary. Please try again.');
     }
   } catch (error) {
-    console.error('Error storing PDF summary:', error);
+    console.error('Error saving PDF summary:', error);
 
-    return ErrorResponse(
-      error instanceof Error ? error.message : 'Error storing PDF summary.'
-    );
+    return ErrorResponse('Error saving PDF summary. Please try again.');
   }
 
   // Revalidate the cache for the user's summaries page to reflect the new summary
@@ -140,6 +139,6 @@ export async function storePdfSummaryAction({
 
   return SuccessResponse(
     { id: savedSummary.id },
-    'PDF summary stored successfully'
+    'PDF summary saved successfully'
   );
 }

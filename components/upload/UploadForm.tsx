@@ -5,8 +5,8 @@ import UploadFormInput from './UploadFormInput';
 import { toast } from 'sonner';
 import { useUploadThing } from '@/utils/uploadthing';
 import {
-  generatePDFSummaryAction,
-  storePdfSummaryAction,
+  generatePdfSummaryAction,
+  savePdfSummaryAction,
 } from '@/actions/upload.action';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -76,7 +76,7 @@ const UploadForm = () => {
       }
 
       // parse the PDF using langchain and summarize
-      const result = await generatePDFSummaryAction(uploadResponse);
+      const result = await generatePdfSummaryAction(uploadResponse);
 
       console.log('result: ', result);
 
@@ -99,7 +99,7 @@ const UploadForm = () => {
         let storeResult: any;
 
         if (data.summary) {
-          storeResult = await storePdfSummaryAction({
+          storeResult = await savePdfSummaryAction({
             summary: data.summary,
             fileUrl: uploadResponse[0].serverData.file.url,
             title: data.title,

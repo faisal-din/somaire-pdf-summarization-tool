@@ -21,10 +21,17 @@ export type UploadResponseProps = {
   };
 }[];
 
-export interface StorePdfSummaryParams {
+export interface SavePdfSummaryProps {
   userId?: string;
   fileUrl: string;
   summary: string;
   title: string;
   fileName: string;
+}
+
+export interface EmptyStateProps {
+  title: string;
+  description: string;
+  buttonText: string;
+  link: string;
 }
