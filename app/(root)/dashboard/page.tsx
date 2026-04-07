@@ -1,70 +1,29 @@
 import BgGradient from '@/components/common/BgGradient';
 import SummaryCard from '@/components/dashboard/SummaryCard';
 import { Button } from '@/components/ui/button';
+import { getSummaries } from '@/lib/summaries';
+import { currentUser } from '@clerk/nextjs/server';
 import { ArrowRight, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-const Dashboard = () => {
+const Dashboard = async () => {
   const uploadLimit = 5; // Example limit for Basic plan
 
-  const summaries = [
-    {
-      id: 1,
-      title: 'Summary of AI Trends in 2026',
-      description:
-        'An overview of the latest advancements and trends in artificial intelligence for the year 2026, including key technologies, applications, and industry insights.',
-      created_at: '2026-06-01',
-      summary_text:
-        'In 2026, AI continues to evolve rapidly with significant advancements in natural language processing, computer vision, and reinforcement learning. Key trends include the rise of generative AI models, increased adoption of AI in healthcare and finance, and ongoing discussions around ethical AI and regulation.',
-      status: 'completed',
-    },
-    {
-      id: 2,
-      title: 'Key Takeaways from the Latest Tech Conference',
-      description:
-        'A summary of the most important points and insights from the recent technology conference, covering new developments and industry trends.',
-      created_at: '2026-06-01',
-      summary_text:
-        'The latest technology conference highlighted several key trends and innovations, including advancements in AI, cybersecurity, and sustainable tech solutions.',
-      status: 'completed',
-    },
-    {
-      id: 3,
-      title: 'Market Analysis of the E-commerce Industry',
-      description:
-        'An in-depth analysis of the current state and future prospects of the e-commerce market, including consumer behavior and competitive dynamics.',
-      created_at: '2026-06-01',
-      summary_text:
-        'The e-commerce industry continues to evolve rapidly, driven by changing consumer preferences, technological advancements, and shifting competitive dynamics.',
-      status: 'completed',
-    },
-    {
-      id: 4,
-      title: 'Summary of the Latest Research Paper on Machine Learning',
-      description:
-        'A detailed summary of the latest research findings in the field of machine learning, including methodologies, results, and implications.',
-      created_at: '2026-06-01',
-      summary_text:
-        'Recent research in machine learning has focused on improving model interpretability, reducing bias, and enhancing generalization across different domains.',
-      status: 'completed',
-    },
-    {
-      id: 5,
-      title: 'Insights from the Annual Financial Report',
-      description:
-        "A comprehensive overview of the key findings and takeaways from the company's annual financial report.",
-      created_at: '2026-06-01',
-      summary_text:
-        'The company reported strong financial performance this year, with significant growth in revenue and profitability.',
-      status: 'completed',
-    },
-  ];
+  const user = await currentUser();
+
+  const userId = user?.id;
+  if (!userId) {
+    return redirect('/sign-in');
+  }
+
+  const summaries = await getSummaries(userId);
 
   return (
     <main className='min-h-screen'>
       <BgGradient className='from-emerald-200 via-teal-200 to-cyan-200' />
 
-      <div className='container mx-auto flex flex-col gap-4'>
+      <div className='container w-full sm:w-[40rem] md:w-[48rem] lg:w-[64rem] mx-auto flex flex-col gap-4'>
         <div className='px-2 py-12 sm:py-24'>
           <div className='flex justify-between gap-4 mb-8'>
             <div className='flex flex-col gap-2'>

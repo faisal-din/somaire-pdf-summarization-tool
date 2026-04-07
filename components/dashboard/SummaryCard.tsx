@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { Card } from '../ui/card';
 import DeleteButton from './DeleteButton';
 import { FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatFileName } from '@/lib/utils';
+import { formatDistanceToNow } from 'date-fns';
 
 const SummaryHeader = ({
   fileUrl,
@@ -18,21 +19,17 @@ const SummaryHeader = ({
       <FileText className='w-6 h-6 sm:w-8 sm:h-8  text-rose-500 ml-1' />
       <div className='flex-1 min-w-0'>
         <h3 className='text-base xl:text-lg font-semibold text-gray-900'>
-          {title}
+          {title || formatFileName(fileUrl)}
         </h3>
-        <p className='text-sm text-gray-500'>{createdAt}</p>
+        <p className='text-sm text-gray-500'>
+          {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+        </p>
       </div>
     </div>
   );
 };
 
 const StatusBadge = ({ status }: { status: string }) => {
-  const statusColors: Record<string, string> = {
-    completed: 'bg-green-100 text-green-800',
-    processing: 'bg-yellow-100 text-yellow-800',
-    failed: 'bg-red-100 text-red-800',
-  };
-
   return (
     <span
       className={cn(

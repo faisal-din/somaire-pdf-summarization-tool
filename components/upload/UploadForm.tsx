@@ -124,7 +124,10 @@ const UploadForm = () => {
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);
       toast.error('Something went wrong', {
-        description: 'An unexpected error occurred. Please try again.',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred. Please try again.',
         style: TOAST_STYLES.error,
       });
       formRef.current?.reset();
