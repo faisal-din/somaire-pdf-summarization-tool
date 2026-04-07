@@ -4,13 +4,17 @@ import { fileUploadSchema } from '@/constants/schema';
 import UploadFormInput from './UploadFormInput';
 import { toast } from 'sonner';
 import { useUploadThing } from '@/utils/uploadthing';
-import { generatePDFSummary } from '@/actions/upload.action';
+import {
+  generatePDFSummary,
+  storePdfSummaryAction,
+} from '@/actions/upload.action';
 import { useRef, useState } from 'react';
 
 // Toast bg-colors for success/error states
 const TOAST_STYLES = {
   success: { backgroundColor: '#34d399', color: '#fff' },
   error: { backgroundColor: '#f87171', color: '#fff' },
+  info: { backgroundColor: '#60a5fa', color: '#fff' },
 } as const;
 
 const UploadForm = () => {
@@ -55,9 +59,10 @@ const UploadForm = () => {
         return;
       }
 
-      toast('Uploading file...', {
+      toast.info('Uploading file...', {
         description:
           'Uploading your file to our servers. This may take a moment.',
+        style: TOAST_STYLES.info,
       });
 
       // Upload file to the uploadthing
@@ -77,6 +82,8 @@ const UploadForm = () => {
       // Extract and summarize PDF content via server action
       const result = await generatePDFSummary(uploadResponse);
 
+      console.log('result: ', result);
+
       const { data = null, message = null } = result || {};
 
       if (!data) {
@@ -87,16 +94,34 @@ const UploadForm = () => {
         return;
       }
 
-      toast.success('File processed successfully!', {
-        style: TOAST_STYLES.success,
+      toast.info('Processing file...', {
+        description: 'Hang tight! Our AI is reading through your document.',
+        style: TOAST_STYLES.info,
       });
-      formRef.current?.reset();
 
-      // TODO: save summary to DB and redirect to summary page
+      if (data) {
+        let storeResult: any;
+        // toast.success('Saving PDF...', {
+        //   description: 'Hang tight! We are saving the PDF summary.',
+        //   style: TOAST_STYLES.success,
+        // });
 
-      // if (data.summary) {
-      // save the summary to the database
-      // }
+        if (data.summary) {
+          storeResult = await storePdfSummaryAction({
+            summary: data.summary,
+            fileUrl: uploadResponse[0].serverData.file.url,
+            title: data.title,
+            fileName: file.name,
+          });
+
+          toast.success('Summary generated!', {
+            description:
+              'Your PDF summary has been generated and saved successfully.',
+            style: TOAST_STYLES.success,
+          });
+          formRef.current?.reset();
+        }
+      }
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);
       toast.error('Something went wrong', {
