@@ -3,7 +3,7 @@
 import { getDbConnection } from '@/lib/db';
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchAndExtractPDFText } from '@/lib/langchain';
-import { StorePdfSummaryParams, UploadResponse } from '@/types';
+import { StorePdfSummaryParams, UploadResponseProps } from '@/types';
 import { ActionResponse, ErrorResponse, SuccessResponse } from '@/types/action';
 import { formatFileNameAsTitle } from '@/utils/format-fileName';
 import { auth } from '@clerk/nextjs/server';
@@ -12,7 +12,7 @@ import { revalidatePath } from 'next/cache';
 type PdfSummaryResponse = { summary: string; title: string };
 
 export async function generatePDFSummaryAction(
-  uploadResponse: UploadResponse
+  uploadResponse: UploadResponseProps
 ): Promise<ActionResponse<PdfSummaryResponse>> {
   if (!uploadResponse || uploadResponse.length === 0) {
     return ErrorResponse('No uploaded files provided.');
@@ -78,22 +78,24 @@ export async function savedPdfSummaryAction({
   try {
     const sql = await getDbConnection();
 
-    await sql`
-     INSERT INTO pdf_summaries (
-    user_id,
-    original_file_url,
-    summary_text,
-    title,
-    file_name
+    const [savedSummary] = await sql`
+    INSERT INTO pdf_summaries (
+      user_id,
+      original_file_url,
+      summary_text,
+      title,
+      file_name
       )
-  VALUES (
-    ${userId},
-    ${fileUrl},
-    ${summary},
-    ${title},
-    ${fileName}
-    );
+    VALUES (
+      ${userId},
+      ${fileUrl},
+      ${summary},
+      ${title},
+      ${fileName}
+    ) RETURNING id, summary_text;
     `;
+
+    return savedSummary;
   } catch (error) {
     console.error('Error saving PDF summary:', error);
     throw error;
@@ -123,7 +125,7 @@ export async function storePdfSummaryAction({
     });
 
     if (!savedSummary) {
-      return ErrorResponse('Failed to save PDF summary.');
+      return ErrorResponse('Failed to save PDF summary. Please try again.');
     }
   } catch (error) {
     console.error('Error storing PDF summary:', error);

@@ -14,7 +14,7 @@ export type PricingCardProps = {
   priceId: string;
 };
 
-export type UploadResponse = {
+export type UploadResponseProps = {
   serverData: {
     userId: string;
     file: { url: string; name: string };
