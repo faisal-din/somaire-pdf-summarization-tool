@@ -46,3 +46,10 @@ This is another example point
 
 Never deviate from this format. Every line that contains content must start with ". "followed by an emoji.
 `;
+
+// Toast bg-colors for success/error states
+export const TOAST_STYLES = {
+  success: { backgroundColor: '#34d399', color: '#fff' },
+  error: { backgroundColor: '#f87171', color: '#fff' },
+  info: { backgroundColor: '#60a5fa', color: '#fff' },
+} as const;

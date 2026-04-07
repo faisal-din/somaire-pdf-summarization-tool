@@ -11,7 +11,7 @@ import { revalidatePath } from 'next/cache';
 
 type PdfSummaryResponse = { summary: string; title: string };
 
-export async function generatePDFSummary(
+export async function generatePDFSummaryAction(
   uploadResponse: UploadResponse
 ): Promise<ActionResponse<PdfSummaryResponse>> {
   if (!uploadResponse || uploadResponse.length === 0) {
@@ -68,7 +68,7 @@ export async function generatePDFSummary(
   }
 }
 
-export async function savedPdfSummary({
+export async function savedPdfSummaryAction({
   userId,
   fileUrl,
   summary,
@@ -114,7 +114,7 @@ export async function storePdfSummaryAction({
       return ErrorResponse('User not found.');
     }
 
-    savedSummary = await savedPdfSummary({
+    savedSummary = await savedPdfSummaryAction({
       userId,
       fileUrl,
       summary,

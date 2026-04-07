@@ -1,7 +1,7 @@
 import BgGradient from '@/components/common/BgGradient';
 import SummaryCard from '@/components/dashboard/SummaryCard';
 import { Button } from '@/components/ui/button';
-import { getSummaries } from '@/lib/summaries';
+import { getSummariesAction } from '@/actions/summary.action';
 import { currentUser } from '@clerk/nextjs/server';
 import { ArrowRight, Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ const Dashboard = async () => {
     return redirect('/sign-in');
   }
 
-  const summaries = await getSummaries(userId);
+  const summaries = await getSummariesAction(userId);
 
   return (
     <main className='min-h-screen'>

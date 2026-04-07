@@ -5,18 +5,12 @@ import UploadFormInput from './UploadFormInput';
 import { toast } from 'sonner';
 import { useUploadThing } from '@/utils/uploadthing';
 import {
-  generatePDFSummary,
+  generatePDFSummaryAction,
   storePdfSummaryAction,
 } from '@/actions/upload.action';
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-// Toast bg-colors for success/error states
-const TOAST_STYLES = {
-  success: { backgroundColor: '#34d399', color: '#fff' },
-  error: { backgroundColor: '#f87171', color: '#fff' },
-  info: { backgroundColor: '#60a5fa', color: '#fff' },
-} as const;
+import { TOAST_STYLES } from '@/constants';
 
 const UploadForm = () => {
   const router = useRouter();
@@ -82,7 +76,7 @@ const UploadForm = () => {
       }
 
       // parse the PDF using langchain and summarize
-      const result = await generatePDFSummary(uploadResponse);
+      const result = await generatePDFSummaryAction(uploadResponse);
 
       console.log('result: ', result);
 
