@@ -6,6 +6,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { ArrowRight, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import EmptyState from '@/components/dashboard/EmptyState';
 
 const Dashboard = async () => {
   const uploadLimit = 5; // Example limit for Basic plan
@@ -64,11 +65,15 @@ const Dashboard = async () => {
           </div>
 
           {/* Summary card */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 sm:px-0'>
-            {summaries.map((summary) => (
-              <SummaryCard key={summary.id} summary={summary} />
-            ))}
-          </div>
+          {summaries.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 sm:px-0'>
+              {summaries.map((summary) => (
+                <SummaryCard key={summary.id} summary={summary} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>

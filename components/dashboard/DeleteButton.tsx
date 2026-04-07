@@ -10,9 +10,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { Trash2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { deleteSummaryAction } from '@/actions/summary.action';
 import { toast } from 'sonner';
 import { TOAST_STYLES } from '@/constants';
@@ -23,18 +23,21 @@ interface DeleteBtnProps {
 
 const DeleteButton = ({ summaryId }: DeleteBtnProps) => {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
     try {
-      const result = await deleteSummaryAction(summaryId);
+      startTransition(async () => {
+        const result = await deleteSummaryAction(summaryId);
 
-      if (!result.success) {
-        toast.error('Error', {
-          description: 'Failed to delete summary.',
-          style: TOAST_STYLES.error,
-        });
-      }
-      setOpen(false);
+        if (!result.success) {
+          toast.error('Error', {
+            description: 'Failed to delete summary.',
+            style: TOAST_STYLES.error,
+          });
+        }
+        setOpen(false);
+      });
     } catch (error) {
       console.error('Error deleting summary:', error);
       toast.error('Error', {
@@ -79,7 +82,14 @@ const DeleteButton = ({ summaryId }: DeleteBtnProps) => {
                 onClick={handleDelete}
                 className='bg-gray-900 hover:bg-gray-600 text-white cursor-pointer transition-colors duration-200 rounded-md'
               >
-                Delete
+                {isPending ? (
+                  <>
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
               </Button>
             </div>
           </DialogFooter>
