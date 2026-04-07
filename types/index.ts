@@ -13,3 +13,18 @@ export type PricingCardProps = {
   paymentLink: string;
   priceId: string;
 };
+
+export type UploadResponse = {
+  serverData: {
+    userId: string;
+    file: { url: string; name: string };
+  };
+}[];
+
+export interface StorePdfSummaryParams {
+  userId?: string;
+  fileUrl: string;
+  summary: string;
+  title: string;
+  fileName: string;
+}

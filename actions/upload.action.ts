@@ -4,24 +4,17 @@ import { getDbConnection } from '@/lib/db';
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchAndExtractPDFText } from '@/lib/langchain';
 import { StorePdfSummaryParams, UploadResponse } from '@/types';
-import {
-  ActionResult,
-  createErrorResult,
-  createSuccessResult,
-} from '@/types/action';
+import { ActionResponse, ErrorResponse, SuccessResponse } from '@/types/action';
 import { formatFileNameAsTitle } from '@/utils/format-fileName';
 import { auth } from '@clerk/nextjs/server';
 
-type PdfSummaryResult = {
-  summary: string;
-  title: string;
-};
+type PdfSummaryResponse = { summary: string; title: string };
 
 export async function generatePDFSummary(
   uploadResponse: UploadResponse
-): Promise<ActionResult<PdfSummaryResult>> {
+): Promise<ActionResponse<PdfSummaryResponse>> {
   if (!uploadResponse || uploadResponse.length === 0) {
-    return createErrorResult('No uploaded files provided.');
+    return ErrorResponse('No uploaded files provided.');
   }
 
   const {
@@ -34,7 +27,7 @@ export async function generatePDFSummary(
   if (!pdfUrl) {
     console.error('PDF URL is missing in the upload response:', uploadResponse);
 
-    return createErrorResult('PDF URL is missing.');
+    return ErrorResponse('PDF URL is missing.');
   }
 
   try {
@@ -52,7 +45,7 @@ export async function generatePDFSummary(
       }
     } catch (error) {
       console.error('Error generating summary with Gemini:', error);
-      return createErrorResult(
+      return ErrorResponse(
         error instanceof Error
           ? error.message
           : 'Failed to generate summary with Gemini.'
@@ -61,7 +54,7 @@ export async function generatePDFSummary(
 
     const formattedFileName = formatFileNameAsTitle(fileName);
 
-    return createSuccessResult(
+    return SuccessResponse(
       {
         summary,
         title: formattedFileName,
@@ -70,7 +63,7 @@ export async function generatePDFSummary(
     );
   } catch (error) {
     console.error('Error generating PDF summary:', error);
-    return createErrorResult('Failed to generate PDF summary.');
+    return ErrorResponse('Failed to generate PDF summary.');
   }
 }
 
@@ -117,7 +110,7 @@ export async function storePdfSummaryAction({
   try {
     const { userId } = await auth();
     if (!userId) {
-      return createErrorResult('User not found.');
+      return ErrorResponse('User not found.');
     }
 
     savedSummary = await savedPdfSummary({
@@ -129,14 +122,14 @@ export async function storePdfSummaryAction({
     });
 
     if (!savedSummary) {
-      return createErrorResult('Failed to save PDF summary.');
+      return ErrorResponse('Failed to save PDF summary.');
     }
 
-    return createSuccessResult(savedSummary, 'PDF summary stored successfully');
+    return SuccessResponse(savedSummary, 'PDF summary stored successfully');
   } catch (error) {
     console.error('Error storing PDF summary:', error);
 
-    return createErrorResult(
+    return ErrorResponse(
       error instanceof Error ? error.message : 'Error storing PDF summary.'
     );
   }

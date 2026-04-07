@@ -1,20 +1,21 @@
 // ---- Types ----
 
-export type ActionResult<T> = {
+export type ActionResponse<T> = {
   success: boolean;
   message: string;
-  data: T | null;
+  data?: T | null;
+  errors?: Record<string, string>;
 };
 
 // ---- Helpers ----
 
-export function createErrorResult(message: string): ActionResult<never> {
+export function ErrorResponse(message: string): ActionResponse<never> {
   return { success: false, message: message, data: null };
 }
 
-export function createSuccessResult<T>(
+export function SuccessResponse<T>(
   data: T,
   message: string
-): ActionResult<T> {
+): ActionResponse<T> {
   return { success: true, message: message, data: data };
 }
