@@ -7,6 +7,7 @@ import { StorePdfSummaryParams, UploadResponse } from '@/types';
 import { ActionResponse, ErrorResponse, SuccessResponse } from '@/types/action';
 import { formatFileNameAsTitle } from '@/utils/format-fileName';
 import { auth } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
 type PdfSummaryResponse = { summary: string; title: string };
 
@@ -48,7 +49,7 @@ export async function generatePDFSummary(
       return ErrorResponse(
         error instanceof Error
           ? error.message
-          : 'Failed to generate summary with Gemini.'
+          : 'Failed to generate summary with Gemini, please try again.'
       );
     }
 
@@ -124,8 +125,6 @@ export async function storePdfSummaryAction({
     if (!savedSummary) {
       return ErrorResponse('Failed to save PDF summary.');
     }
-
-    return SuccessResponse(savedSummary, 'PDF summary stored successfully');
   } catch (error) {
     console.error('Error storing PDF summary:', error);
 
@@ -133,4 +132,12 @@ export async function storePdfSummaryAction({
       error instanceof Error ? error.message : 'Error storing PDF summary.'
     );
   }
+
+  // Revalidate the cache for the user's summaries page to reflect the new summary
+  revalidatePath(`/summaries/${savedSummary.id}`);
+
+  return SuccessResponse(
+    { id: savedSummary.id },
+    'PDF summary stored successfully'
+  );
 }

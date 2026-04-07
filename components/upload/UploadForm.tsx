@@ -9,6 +9,7 @@ import {
   storePdfSummaryAction,
 } from '@/actions/upload.action';
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Toast bg-colors for success/error states
 const TOAST_STYLES = {
@@ -18,6 +19,7 @@ const TOAST_STYLES = {
 } as const;
 
 const UploadForm = () => {
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,7 +81,7 @@ const UploadForm = () => {
         return;
       }
 
-      // Extract and summarize PDF content via server action
+      // parse the PDF using langchain and summarize
       const result = await generatePDFSummary(uploadResponse);
 
       console.log('result: ', result);
@@ -101,10 +103,6 @@ const UploadForm = () => {
 
       if (data) {
         let storeResult: any;
-        // toast.success('Saving PDF...', {
-        //   description: 'Hang tight! We are saving the PDF summary.',
-        //   style: TOAST_STYLES.success,
-        // });
 
         if (data.summary) {
           storeResult = await storePdfSummaryAction({
@@ -120,6 +118,7 @@ const UploadForm = () => {
             style: TOAST_STYLES.success,
           });
           formRef.current?.reset();
+          router.push(`/summaries/${storeResult.data.id}`);
         }
       }
     } catch (error) {
