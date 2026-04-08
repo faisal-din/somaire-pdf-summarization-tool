@@ -36,7 +36,12 @@ const SourceInfo = ({
           </a>
         </Button>
 
-        <DownloadSummaryButton />
+        <DownloadSummaryButton
+          title={title}
+          summaryText={summaryText}
+          fileName={fileName}
+          createdAt={createdAt}
+        />
       </div>
     </div>
   );
