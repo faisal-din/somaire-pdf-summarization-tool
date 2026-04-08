@@ -53,7 +53,10 @@ export async function generatePdfSummaryAction(
       return ErrorResponse(
         errorMessage.includes('503') || errorMessage.includes('UNAVAILABLE')
           ? 'Gemini is experiencing high demand. Please try again in a moment.'
-          : `Failed to generate summary with Gemini, ${errorMessage}`
+          : errorMessage.includes('429') ||
+              errorMessage.includes('RATE_LIMIT_EXCEEDED')
+            ? 'Rate limit exceeded. Please wait a moment before trying again.'
+            : `Failed to generate summary with Gemini, please try again.`
       );
     }
 
