@@ -43,6 +43,6 @@ export const generateSummaryFromGemini = async (pdfText: string) => {
     return text;
   } catch (error) {
     console.error('Error generating summary with Gemini:', error);
-    throw new Error('Failed to generate summary with Gemini.');
+    throw error;
   }
 };

@@ -46,8 +46,14 @@ export async function generatePdfSummaryAction(
       }
     } catch (error) {
       console.error('Error generating summary with Gemini:', error);
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error occurred';
+
       return ErrorResponse(
-        'Failed to generate summary with Gemini, please try again.'
+        errorMessage.includes('503') || errorMessage.includes('UNAVAILABLE')
+          ? 'Gemini is experiencing high demand. Please try again in a moment.'
+          : `Failed to generate summary with Gemini, ${errorMessage}`
       );
     }
 

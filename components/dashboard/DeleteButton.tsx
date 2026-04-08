@@ -80,6 +80,7 @@ const DeleteButton = ({ summaryId }: DeleteBtnProps) => {
               </Button>
               <Button
                 onClick={handleDelete}
+                disabled={isPending}
                 className='bg-gray-900 hover:bg-gray-600 text-white cursor-pointer transition-colors duration-200 rounded-md'
               >
                 {isPending ? (

@@ -17,7 +17,7 @@ const NavigatationControls = ({
   onSectionChange: (sectionIndex: number) => void;
 }) => {
   return (
-    <div className='absolute bottom-0 left-8 right-0 p-4 bg-background/80 backdrop-blur-xs border-tborder-rose-500/10'>
+    <div className='absolute bottom-0 left-8 right-0 p-4 bg-background/80 backdrop-blur-xs border-t-2 border-rose-500/10'>
       <div className='flex justify-between items-center'>
         <Button
           variant='ghost'
