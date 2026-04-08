@@ -4,7 +4,9 @@ import { getDbConnection } from '@/lib/db';
 import { ErrorResponse } from '@/types/action';
 import { currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
+import { success } from 'zod';
 
+// Get all summaries for a user
 export async function getSummariesAction(userId: string) {
   const sql = await getDbConnection();
 
@@ -16,6 +18,38 @@ export async function getSummariesAction(userId: string) {
   return summaries;
 }
 
+// Get a specific summary by ID (authorized)
+export async function getSummaryByIdAction(summaryId: string) {
+  try {
+    const sql = await getDbConnection();
+
+    const [summary] = await sql`
+        SELECT 
+         id, 
+        user_id, 
+        title, 
+        original_file_url, 
+        summary_text, 
+        file_name, 
+        status, 
+        created_at, 
+        updated_at,   
+        LENGTH(summary_text) - LENGTH(REPLACE(summary_text, ' ', '')) + 1 as word_count
+        FROM pdf_summaries
+        WHERE id = ${summaryId}
+    `;
+
+    return summary;
+  } catch (error) {
+    console.error('Error fetching summary by ID:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch summary by ID.',
+    };
+  }
+}
+
+//Delete summary (authorized)
 export async function deleteSummaryAction(summaryId: string) {
   try {
     const user = await currentUser();
@@ -38,11 +72,9 @@ export async function deleteSummaryAction(summaryId: string) {
       return { success: true };
     }
 
-    return ErrorResponse('Summary not found or not authorized to delete');
+    return ErrorResponse('Summary not found or unauthorized to delete');
   } catch (error) {
     console.error('Error deleting summary:', error);
-    return ErrorResponse(
-      error instanceof Error ? error.message : 'Error deleting summary'
-    );
+    return ErrorResponse('Failed to delete summary.');
   }
 }
