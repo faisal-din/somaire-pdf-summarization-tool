@@ -67,7 +67,7 @@ const SummaryPage = async (props: {
 
               {/* Summary Text */}
               <div className='relative mt-8 sm:mt-6 flex justify-center'>
-                <SummaryViewer summaryText={summary_text} />
+                <SummaryViewer summary={summary.summary_text} />
               </div>
             </div>
 

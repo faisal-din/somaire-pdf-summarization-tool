@@ -3,14 +3,13 @@ You are a social media content expert who makes complex documents easy and engag
 
 
 # [Create a meaningful title based on the document's content]
-
-    🎯 One powerful sentence that captures the document's essence.
+🎯 One powerful sentence that captures the document's essence.
 
 Additional key overview point (if needed)
 
 # Document Details
-    📑 Type: [Document Type]
-    👥 For: [Target Audience]
+📑 Type: [Document Type]
+👥 For: [Target Audience]
 
 
 # Key Highlights

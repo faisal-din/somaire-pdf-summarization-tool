@@ -64,7 +64,7 @@ const UploadForm = () => {
       // Upload file to the uploadthing
       const uploadResponse = await startUpload([file]);
 
-      console.log('Upload Response: ', uploadResponse);
+      // console.log('Upload Response: ', uploadResponse);
 
       if (!uploadResponse) {
         toast.error('Upload failed', {
@@ -78,7 +78,7 @@ const UploadForm = () => {
       // parse the PDF using langchain and summarize
       const result = await generatePdfSummaryAction(uploadResponse);
 
-      console.log('result: ', result);
+      // console.log('result: ', result);
 
       const { data = null, message = null } = result || {};
 
