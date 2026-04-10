@@ -1,24 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card } from '../ui/card';
-import NavigatationControls from './NavigatationControls';
+import NavigationControls from './NavigationControls';
 import ProgressBar from './ProgressBar';
 import { parseSection } from '@/utils/summary-helpers';
 import ContentSection from './ContentSection';
 
-const SectionTitle = ({ title }: { title: string }) => {
-  return (
-    <div className='flex flex-col gap-2 mb-6 sticky top-0 bg-background/80 backdrop-blur-sm py-4 z-10'>
-      <h2 className='text-3xl lg:text-4xl font-bold text-center flex items-center gap-2 justify-center'>
-        {title}
-      </h2>
-    </div>
-  );
-};
+const SectionTitle = ({ title }: { title: string }) => (
+  <div className='sticky top-0 z-10 mb-6 flex flex-col gap-2 bg-background/80 py-4 backdrop-blur-sm'>
+    <h2 className='flex items-center justify-center gap-2 text-center text-xl sm:text-3xl font-bold lg:text-4xl'>
+      {title}
+    </h2>
+  </div>
+);
 
 const SummaryViewer = ({ summary }: { summary: string }) => {
   const [currentSection, setCurrentSection] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const sections = summary
     .split('\n# ')
@@ -27,31 +26,35 @@ const SummaryViewer = ({ summary }: { summary: string }) => {
     .map(parseSection);
 
   const totalSections = sections.length;
+  const currentData = sections[currentSection];
 
-  const handlePrev = () => {
-    setCurrentSection((prev) => Math.max(prev - 1, 0));
-  };
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentSection]);
 
-  const handleNext = () => {
+  const handlePrev = () => setCurrentSection((prev) => Math.max(prev - 1, 0));
+
+  const handleNext = () =>
     setCurrentSection((prev) => Math.min(prev + 1, totalSections - 1));
-  };
 
   return (
-    <Card className='relative px-2 h-[500px] sm:h-[600px]   w-full xl:w-[600px] overflow-hidden bg-linear-to-r from-background via-background/95 to-rose-500/5 backdrop-blur-lg shadow-2xl rounded-3xl border border-rose-500/10  '>
+    <Card className='relative h-[500px] w-full overflow-hidden rounded-3xl border border-rose-500/10 bg-gradient-to-r from-background via-background/95 to-rose-500/5 px-2 shadow-2xl backdrop-blur-lg sm:h-[600px] xl:w-[600px]'>
       <ProgressBar currentSection={currentSection} sections={sections} />
-      <div className='h-full overflow-y-auto scrollbar-hide pt-12 sm:pt-16 pb-20 sm:pb-24'>
-        <div className='px-4 sm:px-6'>
-          <SectionTitle title={sections[currentSection]?.title || ''} />
-          <ul className='list-disc list-inside mt-4 space-y-2'>
-            <ContentSection
-              title={sections[currentSection]?.title || ''}
-              points={sections[currentSection]?.points || []}
-            />
-          </ul>
+
+      <div
+        ref={scrollRef}
+        className='h-full overflow-y-auto pb-20 pt-12 scrollbar-hide sm:pb-24 sm:pt-16'
+      >
+        <div className='px-2 sm:px-6'>
+          <SectionTitle title={currentData?.title ?? ''} />
+          <ContentSection
+            title={currentData?.title ?? ''}
+            points={currentData?.points ?? []}
+          />
         </div>
       </div>
 
-      <NavigatationControls
+      <NavigationControls
         currentSection={currentSection}
         totalSections={totalSections}
         onPrev={handlePrev}

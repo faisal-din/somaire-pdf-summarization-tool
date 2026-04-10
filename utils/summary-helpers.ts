@@ -13,7 +13,9 @@ export const parseSection = (
 
   content.forEach((line) => {
     const trimmedLine = line.trim();
-    if (trimmedLine.startsWith('⭐')) {
+    const isNewPoint = (line: string) => /^(⭐|•|-|\*)\s/.test(line);
+
+    if (isNewPoint(trimmedLine)) {
       if (currentPoint) {
         points.push(currentPoint.trim());
       }
@@ -35,8 +37,6 @@ export const parseSection = (
   const filteredPoints = points.filter(
     (point) => point && !point.startsWith('#') && !point.startsWith('Choose')
   );
-
-  console.log({ currentPoint });
 
   return { title: cleanTitle, points: filteredPoints };
 };
