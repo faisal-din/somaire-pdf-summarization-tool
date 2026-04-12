@@ -1,34 +1,5 @@
+import { pricingPlans } from '@/constants';
 import PricingCard from '../common/PricingCard';
-
-const plans = [
-  {
-    id: 'basic',
-    name: 'Basic',
-    price: '$9.99',
-    description: 'For professionals and teams',
-    items: [
-      '5 PDF summaries per month',
-      'Standard processing speed',
-      'Email support',
-    ],
-    paymentLink: '',
-    priceId: '',
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: '$19.99',
-    description: 'For professionals and teams',
-    items: [
-      'Unlimited PDF summaries',
-      'Priority processing',
-      '24/7 priority support',
-      'Markdown Export',
-    ],
-    paymentLink: '',
-    priceId: '',
-  },
-];
 
 const PricingSection = () => {
   return (
@@ -40,7 +11,7 @@ const PricingSection = () => {
           </h2>
         </div>
         <div className='relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8'>
-          {plans.map((plan, index) => (
+          {pricingPlans.map((plan, index) => (
             <PricingCard key={index} {...plan} />
           ))}
         </div>

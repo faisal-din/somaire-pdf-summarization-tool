@@ -63,3 +63,39 @@ export const TOAST_STYLES = {
   error: { backgroundColor: '#f87171', color: '#fff' },
   info: { backgroundColor: '#60a5fa', color: '#fff' },
 } as const;
+
+const isDev = process.env.NODE_ENV === 'development';
+
+export const pricingPlans = [
+  {
+    id: 'basic',
+    name: 'Basic',
+    price: '$9.99',
+    description: 'For professionals and teams',
+    items: [
+      '5 PDF summaries per month',
+      'Standard processing speed',
+      'Email support',
+    ],
+    paymentLink: isDev
+      ? 'https://buy.stripe.com/test_aFadR97EVbV7eeQgMH2ZO00'
+      : '',
+    priceId: isDev ? 'price_1TL6GTE8LmEf75TfyiNSC9ZF' : '',
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: '$19.99',
+    description: 'For professionals and teams',
+    items: [
+      'Unlimited PDF summaries',
+      'Priority processing',
+      '24/7 priority support',
+      'Markdown Export',
+    ],
+    paymentLink: isDev
+      ? 'https://buy.stripe.com/test_aFa28r2kBgbnb2E3ZV2ZO01'
+      : '',
+    priceId: isDev ? 'price_1TL6GTE8LmEf75Tfml9QyTrx' : '',
+  },
+];

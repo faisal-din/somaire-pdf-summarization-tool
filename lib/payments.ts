@@ -87,14 +87,15 @@ async function createOrUpdateUser({
 
     if (user.length === 0) {
       await sql`
-        INSERT INTO users (email, full_name, customer_id, price_id, status) VALUES (${email}, ${full_name}, ${customerId}, ${price_id}, ${status}) RETURNING *
+        INSERT INTO users (email, full_name, customer_id, price_id, status) VALUES (${email}, ${full_name}, ${customerId}, ${price_id}, ${status})
       `;
     }
+
+    return { success: true, message: 'User created or updated successfully' };
   } catch (error) {
     console.error('Error creating or updating user:', error);
     throw error;
   }
-  return { success: true, message: 'User created or updated successfully' };
 }
 
 // Inserts a payment record linked to the user and Stripe session
@@ -125,7 +126,7 @@ async function createPayment({
         ${id}, 
         ${priceId},
         ${userEmail} 
-       ) RETURNING *
+       ) 
     `;
 
     return { success: true, message: 'Payment recorded successfully' };

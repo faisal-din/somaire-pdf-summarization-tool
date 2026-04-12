@@ -1,11 +1,9 @@
 import { FileText } from 'lucide-react';
-import { Button } from '../ui/button';
 import NavLink from './NavLink';
 import { Show, UserButton } from '@clerk/nextjs';
+import PlanBadge from './PlanBadge';
 
 const Header = () => {
-  const isSignedIn = false;
-
   return (
     <nav className='container flex items-center justify-between py-4 lg:px-8 px-4 mx-auto'>
       <div className='flex lg:flex-1'>
@@ -41,7 +39,9 @@ const Header = () => {
             >
               Upload a PDF
             </NavLink>
-            <div>Pro</div>
+
+            <PlanBadge />
+
             <Show when='signed-in'>
               <UserButton />
             </Show>
