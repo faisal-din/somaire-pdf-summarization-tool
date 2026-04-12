@@ -1,8 +1,22 @@
 import BgGradient from '@/components/common/BgGradient';
 import UploadForm from '@/components/upload/UploadForm';
 import UploadHeader from '@/components/upload/UploadHeader';
+import { hasReachedUploadLimit } from '@/lib/user';
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-const UploadPDF = () => {
+const UploadPDF = async () => {
+  const user = await currentUser();
+
+  const userId = user?.id;
+  if (!userId) {
+    return redirect('/sign-in');
+  }
+
+  const { hasReachedLimit } = await hasReachedUploadLimit(userId);
+
+  if (hasReachedLimit) redirect('/dashboard');
+
   return (
     <section className='min-h-screen  '>
       <BgGradient />

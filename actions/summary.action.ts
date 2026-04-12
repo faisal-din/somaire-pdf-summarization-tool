@@ -78,3 +78,18 @@ export async function deleteSummaryAction(summaryId: string) {
     return ErrorResponse('Failed to delete summary.');
   }
 }
+
+export async function getUserUploadCountAction(userId: string) {
+  try {
+    const sql = await getDbConnection();
+    const query = await sql`
+        SELECT COUNT(*) as count FROM pdf_summaries WHERE user_id = ${userId} 
+    `;
+
+    const count = query[0]?.count || 0;
+    return count;
+  } catch (error) {
+    console.error('Error fetching user upload count:', error);
+    return 0;
+  }
+}
