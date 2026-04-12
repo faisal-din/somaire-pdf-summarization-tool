@@ -56,7 +56,43 @@ Every point MUST:
 
 Never break these rules.
 `;
+export const DEMO_SUMMARY = `# Unlocking the Power of AI: A Guide to ChatGPT and Its Applications
+• 🤖 ChatGPT is an advanced language model developed by OpenAI that can understand and generate human-like text.
+• 🌐 It has a wide range of applications, from customer support to content creation.
 
+# What is ChatGPT?
+• 🧠 ChatGPT is based on the GPT architecture, which uses deep learning to process and generate text.
+• 📚 It has been trained on a vast amount of data, allowing it to understand context and produce coherent responses.
+
+# Key Features
+• 🚀 Natural language understanding: ChatGPT can comprehend complex queries and provide relevant answers.
+• 🎨 Creative content generation: It can assist in writing, brainstorming, and generating ideas.
+• 🛠️ Customization: Developers can fine-tune ChatGPT for specific use cases.
+
+# Why ChatGPT Matters
+• 💡 ChatGPT has the potential to revolutionize how we interact with technology, making it more intuitive and accessible.
+
+# Practical Applications
+• 🛍️ E-commerce: ChatGPT can enhance customer service by providing instant support and personalized recommendations.
+• 📝 Content Creation: It can assist writers, marketers, and creators in generating high-quality content quickly.
+• 📊 Data Analysis: ChatGPT can help analyze and summarize large datasets, making it easier to extract insights.
+
+# Pro Tips for Using ChatGPT
+• ⭐ Start with clear prompts: Providing specific instructions can help ChatGPT generate better responses.
+• 💎 Experiment with different use cases: ChatGPT can be adapted for various applications, so don't hesitate to explore its capabilities.
+• 🌟 Monitor and refine: Regularly review the outputs and fine-tune your approach to get the best results.
+
+# Key Terms to Know
+• 📚 GPT (Generative Pre-trained Transformer): A type of language model that generates text based on patterns learned from data.
+• 📚 Fine-tuning: The process of adjusting a pre-trained model to perform better on specific tasks.
+
+# Bottom Line
+• 💫 ChatGPT is a powerful tool that can enhance productivity and creativity across various domains, making it an essential asset in the AI landscape.
+
+# Final Thoughts
+• 🌟 As AI continues to evolve, tools like ChatGPT will play a crucial role in shaping the future of human-computer interaction.
+
+`;
 // Toast bg-colors for success/error states
 export const TOAST_STYLES = {
   success: { backgroundColor: '#34d399', color: '#fff' },
@@ -99,3 +135,47 @@ export const pricingPlans = [
     priceId: isDev ? 'price_1TL6GTE8LmEf75Tfml9QyTrx' : '',
   },
 ];
+
+export const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.1 },
+  },
+};
+
+export const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      damping: 15,
+      stiffness: 50,
+      duration: 0.8,
+    },
+  },
+};
+
+export const buttonVariants = {
+  scale: 1.05,
+  transition: {
+    type: 'spring',
+    stiffness: 300,
+    damping: 10,
+  },
+};
+
+export const listVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+      damping: 20,
+      duration: 0.5,
+    },
+  },
+};

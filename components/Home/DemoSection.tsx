@@ -1,4 +1,7 @@
 import { Pizza } from 'lucide-react';
+import SummaryViewer from '../dashboard/SummaryViewer';
+import { DEMO_SUMMARY } from '@/constants';
+import { MotionDiv, MotionH3 } from '../common/motionWrapper';
 
 const DemoSection = () => {
   return (
@@ -24,17 +27,29 @@ const DemoSection = () => {
           </div>
 
           <div className='text-center mb-16'>
-            <h3 className='font-bold text-3xl lg:text-4xl max-w-2xl mx-auto px-4 sm:px-6'>
+            <MotionH3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className='font-bold text-3xl lg:text-4xl max-w-2xl mx-auto px-4 sm:px-6'
+            >
               Watch how Sommaire transforms{' '}
               <span className='bg-linear-to-r from-rose-500 to-rose-700 bg-clip-text text-transparent'>
                 your PDFs
               </span>{' '}
               into concise summaries in seconds
-            </h3>
+            </MotionH3>
           </div>
 
           <div className='flex justify-center items-center px-2 sm:px-4 lg:px-6'>
             {/* Summary Preview */}
+            <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <SummaryViewer summary={DEMO_SUMMARY} />
+            </MotionDiv>
           </div>
         </div>
       </div>

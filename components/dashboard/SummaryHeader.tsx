@@ -51,7 +51,7 @@ const SummaryHeader = ({
           <Button
             variant='ghost'
             size='sm'
-            className='group flex items-center gap-1.5 rounded-full border border-rose-100 bg-rose-50 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-xs transition-all duration-300 hover:bg-white/80 hover:shadow-md sm:px-4 sm:text-sm'
+            className='group flex items-center gap-1.5 rounded-full border border-rose-100 bg-rose-50 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-xs transition-all duration-300 hover:bg-white/80 hover:shadow-md sm:px-4 sm:text-sm cursor-pointer'
           >
             <ChevronLeft className='h-3.5 w-3.5 text-rose-400 transition-transform duration-300 group-hover:-translate-x-0.5' />
             Back

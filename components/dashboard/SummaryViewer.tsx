@@ -6,6 +6,7 @@ import NavigationControls from './NavigationControls';
 import ProgressBar from './ProgressBar';
 import { parseSection } from '@/utils/summary-helpers';
 import ContentSection from './ContentSection';
+import { MotionDiv } from '../common/motionWrapper';
 
 const SectionTitle = ({ title }: { title: string }) => (
   <div className='sticky top-0 z-10 mb-6 flex flex-col gap-2 bg-background/80 py-4 backdrop-blur-sm'>
@@ -41,7 +42,12 @@ const SummaryViewer = ({ summary }: { summary: string }) => {
     <Card className='relative h-[500px] w-full overflow-hidden rounded-3xl border border-rose-500/10 bg-gradient-to-r from-background via-background/95 to-rose-500/5 px-2 shadow-2xl backdrop-blur-lg sm:h-[600px] xl:w-[600px]'>
       <ProgressBar currentSection={currentSection} sections={sections} />
 
-      <div
+      <MotionDiv
+        key={currentSection}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        exit={{ opacity: 0 }}
         ref={scrollRef}
         className='h-full overflow-y-auto pb-20 pt-12 scrollbar-hide sm:pb-24 sm:pt-16'
       >
@@ -52,7 +58,7 @@ const SummaryViewer = ({ summary }: { summary: string }) => {
             points={currentData?.points ?? []}
           />
         </div>
-      </div>
+      </MotionDiv>
 
       <NavigationControls
         currentSection={currentSection}
