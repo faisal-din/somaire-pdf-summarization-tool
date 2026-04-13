@@ -11,6 +11,7 @@ import {
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TOAST_STYLES } from '@/constants';
+import LoadingSkelaton from './LoadingSkelaton';
 
 const UploadForm = () => {
   const router = useRouter();
@@ -131,12 +132,45 @@ const UploadForm = () => {
   };
 
   return (
-    <div className='flex flex-col gap-8 w-full max-w-2xl mx-auto'>
+    <div className='flex flex-col gap-8 w-full max-w-2xl mx-auto mt-2'>
+      <div className='relative'>
+        <div className='absolute inset-0 flex items-center' aria-hidden='true'>
+          <div className='w-full border-t border-gray-300 dark:border-gray-800' />
+        </div>
+
+        <div className='relative flex justify-center '>
+          <span className='px-3 bg-background dark:bg-gray-900 text-muted-foreground text-sm'>
+            Upload your PDF to get started
+          </span>
+        </div>
+      </div>
+
       <UploadFormInput
         ref={formRef}
         onSubmit={handleSubmit}
         isLoading={isLoading}
       />
+
+      {isLoading && (
+        <>
+          <div className='relative'>
+            <div
+              className='absolute inset-0 flex items-center '
+              aria-hidden='true'
+            >
+              <div className='w-full border-t border-gray-300 dark:border-gray-800' />
+            </div>
+
+            <div className='relative flex justify-center '>
+              <span className='px-3 bg-background dark:bg-gray-900 text-muted-foreground text-sm'>
+                Processing your PDF, please wait...
+              </span>
+            </div>
+          </div>
+
+          <LoadingSkelaton />
+        </>
+      )}
     </div>
   );
 };

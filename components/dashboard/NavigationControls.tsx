@@ -29,7 +29,7 @@ const NavigationControls = ({
           disabled={isFirst}
           aria-label='Previous section'
           className={cn(
-            'h-10 w-10 rounded-full border border-rose-500/20 bg-gradient-to-br from-rose-500 to-rose-600 text-white transition-all duration-200 sm:h-12 sm:w-12',
+            'h-10 w-10 rounded-full border border-rose-500/20 bg-linear-to-br from-rose-500 to-rose-600 text-white transition-all duration-200 sm:h-12 sm:w-12',
             isFirst
               ? 'cursor-not-allowed opacity-40'
               : 'cursor-pointer hover:from-rose-600 hover:to-rose-700 hover:shadow-md'
