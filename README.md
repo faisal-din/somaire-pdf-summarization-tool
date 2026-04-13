@@ -199,8 +199,8 @@ graph TD
 The following Stripe events are handled via `/api/webhooks/stripe`:
 
 | Event                           | Action                     |
-| ------------------------------- | -------------------------- | --- |
-| `checkout.session.completed`    | Activate user subscription |     |
+| ------------------------------- | -------------------------- |
+| `checkout.session.completed`    | Activate user subscription |
 | `customer.subscription.deleted` | Downgrade to free tier     |
 
 ---
@@ -252,7 +252,8 @@ If this project helped you, please consider giving it a ⭐ on GitHub!
 
 <br />
 
-[![GitHub Stars](https://img.shields.io/github/stars/yourusername/sommaire?style=social)](https://github.com/yourusername/sommaire)
-[![Twitter Follow](https://img.shields.io/twitter/follow/yourusername?style=social)](https://twitter.com/yourusername)
+[![GitHub Stars](https://img.shields.io/github/stars/faisal-din/somaire-pdf-summarization-tool?style=social)](https://github.com/faisal-din/sommaire)
+
+<!-- [![Twitter Follow](https://img.shields.io/twitter/follow/yourusername?style=social)](https://twitter.com/yourusername) -->
 
 </div>
