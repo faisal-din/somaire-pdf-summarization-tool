@@ -1,3 +1,5 @@
+import { Variants } from 'motion/react';
+
 export const SUMMARY_SYSTEM_PROMPT = `
 You are a social media content expert who makes complex documents easy and engaging to read. Create a viral-style summary using emojis that match the document's context. Format your response in markdown with proper line breaks.
 
@@ -93,6 +95,7 @@ export const DEMO_SUMMARY = `# Unlocking the Power of AI: A Guide to ChatGPT and
 • 🌟 As AI continues to evolve, tools like ChatGPT will play a crucial role in shaping the future of human-computer interaction.
 
 `;
+
 // Toast bg-colors for success/error states
 export const TOAST_STYLES = {
   success: { backgroundColor: '#34d399', color: '#fff' },
@@ -144,12 +147,13 @@ export const containerVariants = {
   },
 };
 
-export const itemVariants = {
+export const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
+    y: 0,
     transition: {
-      type: 'spring',
+      type: 'spring' as const, // 👈 add as const
       damping: 15,
       stiffness: 50,
       duration: 0.8,
@@ -160,7 +164,7 @@ export const itemVariants = {
 export const buttonVariants = {
   scale: 1.05,
   transition: {
-    type: 'spring',
+    type: 'spring' as const, // 👈 add as const
     stiffness: 300,
     damping: 10,
   },
@@ -172,7 +176,7 @@ export const listVariants = {
     opacity: 1,
     x: 0,
     transition: {
-      type: 'spring',
+      type: 'spring' as const, // 👈 add as const
       stiffness: 100,
       damping: 20,
       duration: 0.5,
