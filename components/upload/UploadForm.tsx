@@ -78,7 +78,7 @@ const UploadForm = () => {
         return;
       }
 
-      const uploadedFileUrl = uploadResponse?.[0]?.serverData?.file?.url;
+      const uploadedFileUrl = uploadResponse?.[0]?.serverData?.fileUrl;
 
       toast.info('Processing file...', {
         description: 'Hang tight! Our AI is reading through your document.',
@@ -92,7 +92,6 @@ const UploadForm = () => {
       const result = await generatePdfTextAction({
         fileUrl: uploadedFileUrl,
       });
-      console.log('PDF Text Extraction Result: ', result);
 
       toast.info('Generating PDF summary...', {
         description: 'Hang tight! Our AI is reading through your document.',
@@ -103,7 +102,6 @@ const UploadForm = () => {
         pdfText: result?.data?.pdfText ?? '',
         fileName: formattedFileName,
       });
-      console.log('PDF Summary Result: ', summaryResult);
 
       const { data = null, message = null } = summaryResult || {};
       if (!data) {

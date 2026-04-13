@@ -26,7 +26,7 @@ const UploadFormInput = forwardRef<HTMLFormElement, UploadFormInputProps>(
           />
           <Button
             type='submit'
-            className='cursor-pointer bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300'
+            className='cursor-pointer bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-2 sm:px-4 rounded transition-colors duration-300'
             disabled={isLoading}
           >
             {isLoading ? (
