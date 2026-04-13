@@ -4,7 +4,6 @@ import { getDbConnection } from '@/lib/db';
 import { ErrorResponse } from '@/types/action';
 import { currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
-import { success } from 'zod';
 
 // Get all summaries for a user
 export async function getSummariesAction(userId: string) {
