@@ -2,10 +2,12 @@ import { FileText } from 'lucide-react';
 import NavLink from './NavLink';
 import { Show, UserButton } from '@clerk/nextjs';
 import PlanBadge from './PlanBadge';
+import MobileNav from './MobileNav';
 
 const Header = () => {
   return (
     <nav className='container flex items-center justify-between py-4 lg:px-8 px-4 mx-auto'>
+      {/* Logo */}
       <div className='flex lg:flex-1'>
         <NavLink href='/' className='flex items-center gap-1 lg:gap-2 shrink-0'>
           <FileText className='w-5 h-5 lg:w-8 lg:h-8 text-gray-900 hover:rotate-12 transform transition duration-200 ease-in-out' />
@@ -15,7 +17,8 @@ const Header = () => {
         </NavLink>
       </div>
 
-      <div className='flex lg:justify-center gap-4 lg:gap-12 lg:items-center'>
+      {/* Desktop Nav */}
+      <div className='hidden lg:flex lg:justify-center gap-4 lg:gap-12 lg:items-center'>
         <NavLink
           href='/#pricing'
           className='transition-colors text-base font-medium duration-200 text-gray-600 hover:text-rose-500'
@@ -30,7 +33,8 @@ const Header = () => {
         </Show>
       </div>
 
-      <div className='flex lg:justify-end lg:flex-1'>
+      {/* Desktop Right Side */}
+      <div className='hidden lg:flex lg:justify-end lg:flex-1'>
         <Show when='signed-in'>
           <div className='flex gap-2 items-center'>
             <NavLink
@@ -42,9 +46,7 @@ const Header = () => {
 
             <PlanBadge />
 
-            <Show when='signed-in'>
-              <UserButton />
-            </Show>
+            <UserButton />
           </div>
         </Show>
 
@@ -57,6 +59,9 @@ const Header = () => {
           </NavLink>
         </Show>
       </div>
+
+      {/* Mobile Nav — server-only components passed as props */}
+      <MobileNav planBadge={<PlanBadge />} />
     </nav>
   );
 };

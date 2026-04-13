@@ -9,10 +9,12 @@ const NavLink = ({
   href,
   children,
   className,
+  onClick,
 }: {
   href: string;
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }) => {
   const pathname = usePathname();
 
@@ -21,6 +23,7 @@ const NavLink = ({
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         'text-sm text-gray-600 hover:text-rose-500 transition-colors duration-200',
         className,
