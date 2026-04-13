@@ -62,7 +62,7 @@ const SummaryHeader = ({
 
       {/* Title */}
       <h1 className='text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl'>
-        <span className='bg-gradient-to-r from-rose-600 to-orange-500 bg-clip-text text-transparent'>
+        <span className='bg-gradient-to-r from-rose-600 to-orange-500 bg-clip-text text-transparent break-all'>
           {title}
         </span>
       </h1>
