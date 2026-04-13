@@ -63,14 +63,11 @@ const Header = () => {
             Upload a PDF
           </NavLink>
           <PlanBadge />
-          <UserButton afterSignOutUrl='/' />
+          <UserButton />
         </div>
 
         {/* Right: Mobile — UserButton + Hamburger only */}
-        <MobileNav
-          planBadge={<PlanBadge />}
-          userButton={<UserButton afterSignOutUrl='/' />}
-        />
+        <MobileNav planBadge={<PlanBadge />} userButton={<UserButton />} />
       </Show>
     </nav>
   );
