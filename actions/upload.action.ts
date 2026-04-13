@@ -3,38 +3,49 @@
 import { getDbConnection } from '@/lib/db';
 import { generateSummaryFromGemini } from '@/lib/geminiai';
 import { fetchAndExtractPDFText } from '@/lib/langchain';
-import { SavePdfSummaryProps, UploadResponseProps } from '@/types';
+import { SavePdfSummaryProps } from '@/types';
 import { ActionResponse, ErrorResponse, SuccessResponse } from '@/types/action';
-import { formatFileNameAsTitle } from '@/utils/format-fileName';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 
 type PdfSummaryResponse = { summary: string; title: string };
 
-// Generate summary from uploaded PDF
-export async function generatePdfSummaryAction(
-  uploadResponse: UploadResponseProps
-): Promise<ActionResponse<PdfSummaryResponse>> {
-  if (!uploadResponse || uploadResponse.length === 0) {
-    return ErrorResponse('No uploaded files provided.');
-  }
-
-  const {
-    serverData: {
-      userId,
-      file: { url: pdfUrl, name: fileName },
-    },
-  } = uploadResponse[0];
-
-  if (!pdfUrl) {
-    console.error('PDF URL is missing in the upload response:', uploadResponse);
-    return ErrorResponse('Invalid upload response.');
+export async function generatePdfTextAction({ fileUrl }: { fileUrl: string }) {
+  if (!fileUrl) {
+    return ErrorResponse('File Upload Failed.');
   }
 
   try {
-    const pdfText = await fetchAndExtractPDFText(pdfUrl);
+    const pdfText = await fetchAndExtractPDFText(fileUrl);
     // console.log('pdf text: ', pdfText);
 
+    if (!pdfText) {
+      return ErrorResponse(
+        'Failed to extract PDF text. The file may be corrupted or in an unsupported format.'
+      );
+    }
+
+    return SuccessResponse(
+      {
+        pdfText,
+      },
+      'PDF text extracted successfully'
+    );
+  } catch (error) {
+    console.error('PDF summary generation error:', error);
+    return ErrorResponse('Failed to generate PDF summary.');
+  }
+}
+
+// Generate summary from uploaded PDF
+export async function generatePdfSummaryAction({
+  pdfText,
+  fileName,
+}: {
+  pdfText: string;
+  fileName: string;
+}): Promise<ActionResponse<PdfSummaryResponse>> {
+  try {
     let summary;
 
     try {
@@ -60,14 +71,12 @@ export async function generatePdfSummaryAction(
       );
     }
 
-    const formattedFileName = formatFileNameAsTitle(fileName);
-
     return SuccessResponse(
       {
         summary,
-        title: formattedFileName,
+        title: fileName,
       },
-      'PDF processed successfully'
+      'PDF summary generated successfully'
     );
   } catch (error) {
     console.error('PDF summary generation error:', error);

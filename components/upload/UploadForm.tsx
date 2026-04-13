@@ -4,14 +4,17 @@ import { fileUploadSchema } from '@/constants/schema';
 import UploadFormInput from './UploadFormInput';
 import { toast } from 'sonner';
 import { useUploadThing } from '@/utils/uploadthing';
-import {
-  generatePdfSummaryAction,
-  savePdfSummaryAction,
-} from '@/actions/upload.action';
+
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TOAST_STYLES } from '@/constants';
 import LoadingSkelaton from './LoadingSkelaton';
+import { formatFileNameAsTitle } from '@/utils/format-fileName';
+import {
+  generatePdfSummaryAction,
+  generatePdfTextAction,
+  savePdfSummaryAction,
+} from '@/actions/upload.action';
 
 const UploadForm = () => {
   const router = useRouter();
@@ -19,22 +22,22 @@ const UploadForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Initialize UploadThing with lifecycle callbacks
-  const { startUpload, routeConfig } = useUploadThing('pdfUploader', {
+  const { startUpload } = useUploadThing('pdfUploader', {
     onClientUploadComplete: () => {
-      toast.success('File uploaded successfully!', {
-        style: TOAST_STYLES.success,
-      });
+      toast.success('File uploaded!', { style: TOAST_STYLES.success });
     },
     onUploadError: (error) => {
       toast.error('Error occurred while uploading.', {
         style: TOAST_STYLES.error,
       });
-      console.error('Upload error:', error);
+      console.error('Error Occurred while uploading:', error);
     },
-    onUploadBegin: ({ file }) => {
-      console.log('Upload started for:', file);
+    onUploadBegin: (data) => {
+      console.log('Upload started for:', data);
     },
   });
+
+  const resetForm = () => formRef.current?.reset();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,8 +67,7 @@ const UploadForm = () => {
 
       // Upload file to the uploadthing
       const uploadResponse = await startUpload([file]);
-
-      // console.log('Upload Response: ', uploadResponse);
+      console.log('Upload Response: ', uploadResponse);
 
       if (!uploadResponse) {
         toast.error('Upload failed', {
@@ -76,45 +78,63 @@ const UploadForm = () => {
         return;
       }
 
-      // parse the PDF using langchain and summarize
-      const result = await generatePdfSummaryAction(uploadResponse);
-
-      // console.log('result: ', result);
-
-      const { data = null, message = null } = result || {};
-
-      if (!data) {
-        toast.error('Processing failed', {
-          description: message ?? 'Failed to process the file.',
-          style: TOAST_STYLES.error,
-        });
-        return;
-      }
+      const uploadedFileUrl = uploadResponse?.[0]?.serverData?.file?.url;
 
       toast.info('Processing file...', {
         description: 'Hang tight! Our AI is reading through your document.',
         style: TOAST_STYLES.info,
       });
 
-      if (data) {
-        let storeResult: any;
+      let storeResult: any;
 
-        if (data.summary) {
-          storeResult = await savePdfSummaryAction({
-            summary: data.summary,
-            fileUrl: uploadResponse[0].serverData.file.url,
-            title: data.title,
-            fileName: file.name,
-          });
+      const formattedFileName = formatFileNameAsTitle(file.name);
 
-          toast.success('Summary generated!', {
-            description:
-              'Your PDF summary has been generated and saved successfully.',
-            style: TOAST_STYLES.success,
-          });
-          formRef.current?.reset();
-          router.push(`/summaries/${storeResult.data.id}`);
-        }
+      const result = await generatePdfTextAction({
+        fileUrl: uploadedFileUrl,
+      });
+      console.log('PDF Text Extraction Result: ', result);
+
+      toast.info('Generating PDF summary...', {
+        description: 'Hang tight! Our AI is reading through your document.',
+        style: TOAST_STYLES.info,
+      });
+
+      const summaryResult = await generatePdfSummaryAction({
+        pdfText: result?.data?.pdfText ?? '',
+        fileName: formattedFileName,
+      });
+      console.log('PDF Summary Result: ', summaryResult);
+
+      const { data = null, message = null } = summaryResult || {};
+      if (!data) {
+        toast.error('Generating summary failed', {
+          description: message ?? 'Failed to process the file.',
+          style: TOAST_STYLES.error,
+        });
+        return;
+      }
+
+      toast.info('Saving PDF summary...', {
+        description: 'Hang tight! We are saving your PDF summary.',
+        style: TOAST_STYLES.info,
+      });
+
+      if (data?.summary) {
+        storeResult = await savePdfSummaryAction({
+          summary: data.summary,
+          fileUrl: uploadedFileUrl,
+          title: formattedFileName,
+          fileName: file.name,
+        });
+
+        toast.success('Summary generated!', {
+          description:
+            'Your PDF summary has been generated and saved successfully.',
+          style: TOAST_STYLES.success,
+        });
+
+        resetForm();
+        router.push(`/summaries/${storeResult.data.id}`);
       }
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);
@@ -125,7 +145,7 @@ const UploadForm = () => {
             : 'An unexpected error occurred. Please try again.',
         style: TOAST_STYLES.error,
       });
-      formRef.current?.reset();
+      resetForm();
     } finally {
       setIsLoading(false);
     }

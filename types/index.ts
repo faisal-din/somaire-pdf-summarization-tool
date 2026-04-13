@@ -14,13 +14,6 @@ export type PricingCardProps = {
   priceId: string;
 };
 
-export type UploadResponseProps = {
-  serverData: {
-    userId: string;
-    file: { url: string; name: string };
-  };
-}[];
-
 export interface SavePdfSummaryProps {
   userId?: string;
   fileUrl: string;

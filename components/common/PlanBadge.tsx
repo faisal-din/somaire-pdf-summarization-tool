@@ -22,7 +22,6 @@ const PlanBadge = async () => {
 
   const plan = pricingPlans.find((plan) => plan.priceId === priceId);
 
-  console.log('planName :', planName);
   if (plan) {
     planName = plan.name;
   }
