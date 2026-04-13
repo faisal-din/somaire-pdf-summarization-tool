@@ -18,7 +18,14 @@ const NavLink = ({
 }) => {
   const pathname = usePathname();
 
-  const isActive = pathname === href || pathname.startsWith(href);
+  // Strip hash from href before comparing to pathname
+  const hrefPath = href.split('#')[0] || '/';
+
+  const isActive =
+    hrefPath !== '/' && // never wildcard-match the root
+    pathname === hrefPath; // exact match only, no startsWith
+
+  // const isActive = pathname === href || pathname.startsWith(href);
 
   return (
     <Link
