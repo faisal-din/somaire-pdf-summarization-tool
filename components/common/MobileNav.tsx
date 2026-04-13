@@ -6,12 +6,21 @@ import NavLink from './NavLink';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 
-const MobileNav = ({ planBadge }: { planBadge?: React.ReactNode }) => {
+const MobileNav = ({
+  planBadge,
+  userButton,
+}: {
+  planBadge?: React.ReactNode;
+  userButton?: React.ReactNode;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const closeSheet = () => setIsOpen(false);
 
   return (
     <div className='flex lg:hidden items-center gap-3'>
+      {/* Avatar visible at all times on mobile */}
+      {userButton}
+
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button variant='ghost' size='icon' aria-label='Open menu'>

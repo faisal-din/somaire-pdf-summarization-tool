@@ -16,7 +16,6 @@ const Header = () => {
           </span>
         </NavLink>
       </div>
-
       {/* Desktop Nav */}
       <div className='hidden lg:flex lg:justify-center gap-4 lg:gap-12 lg:items-center'>
         <NavLink
@@ -32,7 +31,6 @@ const Header = () => {
           </NavLink>
         </Show>
       </div>
-
       {/* Desktop Right Side */}
       <div className='hidden lg:flex lg:justify-end lg:flex-1'>
         <Show when='signed-in'>
@@ -61,7 +59,7 @@ const Header = () => {
       </div>
 
       {/* Mobile Nav — server-only components passed as props */}
-      <MobileNav planBadge={<PlanBadge />} />
+      <MobileNav planBadge={<PlanBadge />} userButton={<UserButton />} />
     </nav>
   );
 };
