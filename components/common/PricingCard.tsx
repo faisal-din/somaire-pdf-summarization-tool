@@ -4,8 +4,9 @@ import { ArrowRight, CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 import { MotionDiv } from './motionWrapper';
 import { listVariants } from '@/constants';
+import { auth } from '@clerk/nextjs/server';
 
-const PricingCard = ({
+const PricingCard = async ({
   id,
   name,
   price,
@@ -14,6 +15,8 @@ const PricingCard = ({
   paymentLink,
   priceId,
 }: PricingCardProps) => {
+  const { userId } = await auth();
+
   return (
     <MotionDiv
       variants={listVariants}
@@ -58,7 +61,7 @@ const PricingCard = ({
           className='space-y-2 flex justify-center w-full'
         >
           <Link
-            href={paymentLink}
+            href={userId ? paymentLink : '/sign-in'}
             className={cn(
               'w-full rounded-full flex items-center justify-center gap-2 bg-linear-to-r  from-rose-800 to-rose-500 hover:from-rose-500 hover:to-rose-800 text-white border-2 py-2 transition-colors duration-300',
               id === 'pro'
